@@ -156,7 +156,7 @@ class LibreHardwareMonitorData:
     def initialize(self, now):
         """Parse of the sensors and adding of devices."""
         self.refresh()
- 
+
         if self.data is None:
             return
 
