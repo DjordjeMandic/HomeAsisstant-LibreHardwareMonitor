@@ -1,0 +1,1 @@
+"""The librehardwaremonitor component."""
