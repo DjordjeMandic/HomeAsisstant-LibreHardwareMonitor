@@ -149,9 +149,19 @@ class LibreHardwareMonitorData:
 
         try:
             response = requests.get(data_url, auth=(self._config.get(CONF_USERNAME), self._config.get(CONF_PASSWORD)), timeout=30)
+            if response.status_code == 401:
+                _LOGGER.warning("Authentication rejected, are credentials correct?")
+            elif response.status_code == 404:
+                _LOGGER.debug("data.json was not found, are you connecting to LibreHardwareMonitor?")
+            elif response.status_code != 200:
+                _LOGGER.debug(f"Requesting data failed, response code: {response.status_code}")
+            if response.status_code != 200:
+                return            
             self.data = response.json()
         except requests.exceptions.ConnectionError:
             _LOGGER.debug("ConnectionError: Is LibreHardwareMonitor running?")
+        except requests.exceptions.JSONDecodeError:
+            _LOGGER.debug("JSONDecodeError: Is data correct?")
 
     def initialize(self, now):
         """Parse of the sensors and adding of devices."""
